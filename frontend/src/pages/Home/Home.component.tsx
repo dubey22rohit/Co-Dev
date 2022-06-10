@@ -15,7 +15,7 @@ const Home = () => {
   const history = useHistory();
 
   const buttonClickHandler = () => {
-    history.push("/register");
+    history.push("/auth");
   };
 
   return (

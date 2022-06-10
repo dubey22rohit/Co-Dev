@@ -14,13 +14,13 @@ const steps: stepOptions = {
 const Auth = () => {
   const [step, setStep] = useState(0);
 
-  const handleClick = () => {
+  const onNext = () => {
     setStep(step + 1);
   };
 
   const Step = steps[step];
 
-  return <Step onClick={handleClick} />;
+  return <Step onNext={onNext} />;
 };
 
 export default Auth;
