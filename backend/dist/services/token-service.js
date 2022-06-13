@@ -17,7 +17,7 @@ const Refresh_1 = __importDefault(require("../models/Refresh"));
 class TokenService {
     generateTokens(payload) {
         const accessToken = jsonwebtoken_1.default.sign(payload, process.env.JWT_ACCESS_TOKEN_SECRET, {
-            expiresIn: "1h",
+            expiresIn: "1m",
         });
         const refreshToken = jsonwebtoken_1.default.sign(payload, process.env.JWT_REFRESH_TOKEN_SECRET, {
             expiresIn: "1y",
@@ -39,6 +39,19 @@ class TokenService {
     }
     verifyAccessToken(token) {
         return jsonwebtoken_1.default.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET);
+    }
+    verifyRefreshToken(token) {
+        return jsonwebtoken_1.default.verify(token, process.env.JWT_REFRESH_TOKEN_SECRET);
+    }
+    findRefreshToken(userId, refreshToken) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Refresh_1.default.findOne({ _id: userId, token: refreshToken });
+        });
+    }
+    updateRefreshToken(userId, refreshToken) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Refresh_1.default.updateOne({ userId: userId }, { token: refreshToken });
+        });
     }
 }
 exports.default = new TokenService();

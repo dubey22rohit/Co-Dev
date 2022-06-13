@@ -87,6 +87,64 @@ class AuthController {
 
     res.json({ user: userDto, auth: true });
   }
+
+  public async refresh(req: Request, res: Response) {
+    const { refreshToken: cookieRefreshToken } = req.cookies;
+
+    let userData;
+
+    try {
+      userData = tokenService.verifyRefreshToken(cookieRefreshToken);
+    } catch (error) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    try {
+      const token = await tokenService.findRefreshToken(
+        userData._id,
+        cookieRefreshToken
+      );
+      if (!token) {
+        return res.status(401).json({ message: "Invalid token" });
+      }
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ message: "Server error : findRefreshToken failed" });
+    }
+
+    //Check if user valid
+    const user = await userService.findUser({ _id: userData._id });
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    const { accessToken, refreshToken } = tokenService.generateTokens({
+      _id: userData._id,
+    });
+
+    try {
+      await tokenService.updateRefreshToken(user._id, refreshToken);
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ message: "Server error : updateRefreshToken failed" });
+    }
+
+    res.cookie("refreshToken", refreshToken, {
+      maxAge: 1000 * 60 * 60 * 24 * 30,
+      httpOnly: true, //ClientJS won't be able to read it, only server will be able to read it
+    });
+
+    res.cookie("accessToken", accessToken, {
+      maxAge: 1000 * 60 * 60 * 24 * 30,
+      httpOnly: true, //ClientJS won't be able to read it, only server will be able to read it
+    });
+
+    const userDto = new UserDto(user);
+
+    res.json({ user: userDto, auth: true });
+  }
 }
 
 export default new AuthController();

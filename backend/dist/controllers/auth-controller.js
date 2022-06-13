@@ -90,6 +90,55 @@ class AuthController {
             res.json({ user: userDto, auth: true });
         });
     }
+    refresh(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { refreshToken: cookieRefreshToken } = req.cookies;
+            let userData;
+            try {
+                userData = token_service_1.default.verifyRefreshToken(cookieRefreshToken);
+            }
+            catch (error) {
+                return res.status(401).json({ message: "Invalid token" });
+            }
+            try {
+                const token = yield token_service_1.default.findRefreshToken(userData._id, cookieRefreshToken);
+                if (!token) {
+                    return res.status(401).json({ message: "Invalid token" });
+                }
+            }
+            catch (error) {
+                return res
+                    .status(500)
+                    .json({ message: "Server error : findRefreshToken failed" });
+            }
+            //Check if user valid
+            const user = yield user_service_1.default.findUser({ _id: userData._id });
+            if (!user) {
+                return res.status(404).json({ message: "User not found!" });
+            }
+            const { accessToken, refreshToken } = token_service_1.default.generateTokens({
+                _id: userData._id,
+            });
+            try {
+                yield token_service_1.default.updateRefreshToken(user._id, refreshToken);
+            }
+            catch (error) {
+                return res
+                    .status(500)
+                    .json({ message: "Server error : updateRefreshToken failed" });
+            }
+            res.cookie("refreshToken", refreshToken, {
+                maxAge: 1000 * 60 * 60 * 24 * 30,
+                httpOnly: true, //ClientJS won't be able to read it, only server will be able to read it
+            });
+            res.cookie("accessToken", accessToken, {
+                maxAge: 1000 * 60 * 60 * 24 * 30,
+                httpOnly: true, //ClientJS won't be able to read it, only server will be able to read it
+            });
+            const userDto = new user_dto_1.default(user);
+            res.json({ user: userDto, auth: true });
+        });
+    }
 }
 exports.default = new AuthController();
 //# sourceMappingURL=auth-controller.js.map

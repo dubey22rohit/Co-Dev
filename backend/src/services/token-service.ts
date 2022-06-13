@@ -4,7 +4,7 @@ import Refresh from "../models/Refresh";
 class TokenService {
   public generateTokens(payload) {
     const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_TOKEN_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "1m",
     });
 
     const refreshToken = jwt.sign(
@@ -30,6 +30,18 @@ class TokenService {
 
   public verifyAccessToken(token) {
     return jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET);
+  }
+
+  public verifyRefreshToken(token) {
+    return jwt.verify(token, process.env.JWT_REFRESH_TOKEN_SECRET);
+  }
+
+  public async findRefreshToken(userId, refreshToken) {
+    return await Refresh.findOne({ _id: userId, token: refreshToken });
+  }
+
+  public async updateRefreshToken(userId, refreshToken) {
+    return await Refresh.updateOne({ userId: userId }, { token: refreshToken });
   }
 }
 
