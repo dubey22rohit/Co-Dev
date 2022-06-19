@@ -17,7 +17,7 @@ const Refresh_1 = __importDefault(require("../models/Refresh"));
 class TokenService {
     generateTokens(payload) {
         const accessToken = jsonwebtoken_1.default.sign(payload, process.env.JWT_ACCESS_TOKEN_SECRET, {
-            expiresIn: "1m",
+            expiresIn: "1h",
         });
         const refreshToken = jsonwebtoken_1.default.sign(payload, process.env.JWT_REFRESH_TOKEN_SECRET, {
             expiresIn: "1y",

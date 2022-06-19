@@ -17,13 +17,14 @@ app.use(
     credentials: true,
   })
 );
+
 app.use("/storage", express.static("storage"));
 
 DBInit();
 app.use(express.json({ limit: "10mb" }));
 app.use("/", router);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5500;
 
 app.listen(PORT, () =>
   console.log(`Server listening on http://localhost:${PORT}`)

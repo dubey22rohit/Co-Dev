@@ -4,16 +4,12 @@ import Refresh from "../models/Refresh";
 class TokenService {
   public generateTokens(payload) {
     const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_TOKEN_SECRET, {
-      expiresIn: "1m",
+      expiresIn: "1h",
     });
 
-    const refreshToken = jwt.sign(
-      payload,
-      process.env.JWT_REFRESH_TOKEN_SECRET,
-      {
-        expiresIn: "1y",
-      }
-    );
+    const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_TOKEN_SECRET, {
+      expiresIn: "1y",
+    });
 
     return { accessToken, refreshToken };
   }

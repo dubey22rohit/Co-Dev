@@ -8,5 +8,5 @@ const router = Router();
 router.post("/api/send-otp", authController.sendOtp);
 router.post("/api/verify-otp", authController.verifyOtp);
 router.post("/api/activate", authMiddleware, activateController.activate);
-router.post("/api/refresh", authController.refresh);
+router.get("/api/refresh", authController.refresh);
 export default router;

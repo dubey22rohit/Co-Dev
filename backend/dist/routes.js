@@ -11,6 +11,6 @@ const router = (0, express_1.Router)();
 router.post("/api/send-otp", auth_controller_1.default.sendOtp);
 router.post("/api/verify-otp", auth_controller_1.default.verifyOtp);
 router.post("/api/activate", auth_middleware_1.default, activate_controller_1.default.activate);
-router.post("/api/refresh", auth_controller_1.default.refresh);
+router.get("/api/refresh", auth_controller_1.default.refresh);
 exports.default = router;
 //# sourceMappingURL=routes.js.map
