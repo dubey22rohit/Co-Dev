@@ -12,6 +12,9 @@ const Phone = ({ onNext }: any) => {
   const [phoneNumber, setPhoneNumber] = useState("");
 
   const submit = async () => {
+    if (!phoneNumber) {
+      return;
+    }
     const { data } = await sendOtp({ phone: phoneNumber });
     console.log(data);
     dispatch(setOtp({ phone: data.phone, hash: data.hash }));
@@ -20,17 +23,14 @@ const Phone = ({ onNext }: any) => {
 
   return (
     <Card title="Enter your phone" icon="phone.png">
-      <TextInput
-        value={phoneNumber}
-        onChange={(e) => setPhoneNumber(e.target.value)}
-      />
+      <TextInput value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
       <div>
         <div className={styles.buttonWrapper}>
           <Button text="Next" onClick={submit} />
         </div>
         <p className={styles.bottomPara}>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolore
-          deleniti vitae laboriosam alias reprehenderit?
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolore deleniti vitae laboriosam
+          alias reprehenderit?
         </p>
       </div>
     </Card>

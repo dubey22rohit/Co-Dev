@@ -100,17 +100,12 @@ class AuthController {
     }
 
     try {
-      const token = await tokenService.findRefreshToken(
-        userData._id,
-        cookieRefreshToken
-      );
+      const token = await tokenService.findRefreshToken(userData._id, cookieRefreshToken);
       if (!token) {
-        return res.status(401).json({ message: "Invalid token" });
+        return res.status(401).json({ message: "Invalid token, not found in DB" });
       }
     } catch (error) {
-      return res
-        .status(500)
-        .json({ message: "Server error : findRefreshToken failed" });
+      return res.status(500).json({ message: "Server error : findRefreshToken failed" });
     }
 
     //Check if user valid
@@ -126,9 +121,7 @@ class AuthController {
     try {
       await tokenService.updateRefreshToken(user._id, refreshToken);
     } catch (error) {
-      return res
-        .status(500)
-        .json({ message: "Server error : updateRefreshToken failed" });
+      return res.status(500).json({ message: "Server error : updateRefreshToken failed" });
     }
 
     res.cookie("refreshToken", refreshToken, {
@@ -144,6 +137,17 @@ class AuthController {
     const userDto = new UserDto(user);
 
     res.json({ user: userDto, auth: true });
+  }
+
+  public async logout(req: Request, res: Response) {
+    const { refreshToken } = req.cookies;
+
+    await tokenService.removeToken(refreshToken);
+
+    res.clearCookie("refreshToken");
+    res.clearCookie("accessToken");
+
+    res.json({ user: null, auth: false });
   }
 }
 

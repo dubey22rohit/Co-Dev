@@ -16,10 +16,10 @@ app.use((0, cors_1.default)({
     origin: ["http://localhost:3000"],
     credentials: true,
 }));
-app.use("/storage", express_1.default.static("storage"));
+app.use("/storage", express_1.default.static(__dirname + "/storage"));
 (0, database_1.default)();
 app.use(express_1.default.json({ limit: "10mb" }));
 app.use("/", routes_1.default);
-const PORT = process.env.PORT || 5500;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server listening on http://localhost:${PORT}`));
 //# sourceMappingURL=app.js.map

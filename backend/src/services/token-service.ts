@@ -33,11 +33,15 @@ class TokenService {
   }
 
   public async findRefreshToken(userId, refreshToken) {
-    return await Refresh.findOne({ _id: userId, token: refreshToken });
+    return await Refresh.findOne({ userId: userId, token: refreshToken });
   }
 
   public async updateRefreshToken(userId, refreshToken) {
     return await Refresh.updateOne({ userId: userId }, { token: refreshToken });
+  }
+
+  public async removeToken(refreshToken) {
+    return await Refresh.deleteOne({ token: refreshToken });
   }
 }
 

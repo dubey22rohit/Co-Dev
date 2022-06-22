@@ -9,9 +9,19 @@ const UserSchema = new Schema({
     phone: { type: String, required: true },
     activated: { type: Boolean },
     username: { type: String, required: false },
-    avatar: { type: String, required: false },
+    avatar: {
+        type: String,
+        required: false,
+        get: (avatar) => {
+            if (avatar) {
+                return `${process.env.BASE_URL}${avatar}`;
+            }
+            return avatar;
+        },
+    },
 }, {
     timestamps: true,
+    toJSON: { getters: true },
 });
 exports.default = mongoose_1.default.model("User", UserSchema, "users");
 //# sourceMappingURL=User.js.map

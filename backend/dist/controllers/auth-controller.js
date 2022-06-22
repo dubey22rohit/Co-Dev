@@ -103,13 +103,11 @@ class AuthController {
             try {
                 const token = yield token_service_1.default.findRefreshToken(userData._id, cookieRefreshToken);
                 if (!token) {
-                    return res.status(401).json({ message: "Invalid token" });
+                    return res.status(401).json({ message: "Invalid token, not found in DB" });
                 }
             }
             catch (error) {
-                return res
-                    .status(500)
-                    .json({ message: "Server error : findRefreshToken failed" });
+                return res.status(500).json({ message: "Server error : findRefreshToken failed" });
             }
             //Check if user valid
             const user = yield user_service_1.default.findUser({ _id: userData._id });
@@ -123,9 +121,7 @@ class AuthController {
                 yield token_service_1.default.updateRefreshToken(user._id, refreshToken);
             }
             catch (error) {
-                return res
-                    .status(500)
-                    .json({ message: "Server error : updateRefreshToken failed" });
+                return res.status(500).json({ message: "Server error : updateRefreshToken failed" });
             }
             res.cookie("refreshToken", refreshToken, {
                 maxAge: 1000 * 60 * 60 * 24 * 30,
@@ -137,6 +133,15 @@ class AuthController {
             });
             const userDto = new user_dto_1.default(user);
             res.json({ user: userDto, auth: true });
+        });
+    }
+    logout(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { refreshToken } = req.cookies;
+            yield token_service_1.default.removeToken(refreshToken);
+            res.clearCookie("refreshToken");
+            res.clearCookie("accessToken");
+            res.json({ user: null, auth: false });
         });
     }
 }

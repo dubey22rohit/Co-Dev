@@ -45,12 +45,17 @@ class TokenService {
     }
     findRefreshToken(userId, refreshToken) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield Refresh_1.default.findOne({ _id: userId, token: refreshToken });
+            return yield Refresh_1.default.findOne({ userId: userId, token: refreshToken });
         });
     }
     updateRefreshToken(userId, refreshToken) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield Refresh_1.default.updateOne({ userId: userId }, { token: refreshToken });
+        });
+    }
+    removeToken(refreshToken) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Refresh_1.default.deleteOne({ token: refreshToken });
         });
     }
 }

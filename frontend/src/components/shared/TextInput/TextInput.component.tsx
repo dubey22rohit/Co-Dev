@@ -8,6 +8,9 @@ const TextInput = (props: TextInputProps) => {
       <input
         type="text"
         className={styles.input}
+        style={{
+          width: props.fullwidth === "true" ? "100%" : "inherit",
+        }}
         value={props.value}
         onChange={props.onChange}
       />

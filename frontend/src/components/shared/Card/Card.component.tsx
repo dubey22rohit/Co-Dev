@@ -6,7 +6,7 @@ const Card = (props: CardProps) => {
   return (
     <div className={styles.card}>
       <div className={styles.headingWrapper}>
-        <img src={`/images/${props.icon}`} alt={props.title} />
+        {props.icon && <img src={`/images/${props.icon}`} alt={props.title} />}
         <h1 className={styles.heading}>{props.title}</h1>
       </div>
       {props.children}

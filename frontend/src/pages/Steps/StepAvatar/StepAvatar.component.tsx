@@ -6,6 +6,7 @@ import styles from "./StepAvatar.module.css";
 import { setAvatar } from "../../../store/activateSlice";
 import { activate } from "../../../http";
 import { setAuth } from "../../../store/authSlice";
+import Loader from "../../../components/shared/Loader/Loader.component";
 
 const StepAvatar = (props: any) => {
   const { username, avatar } = useSelector((state: any) => state.activate);
@@ -14,6 +15,7 @@ const StepAvatar = (props: any) => {
   const [avatarImage, setAvatarImage] = useState<string | ArrayBuffer | null>(
     "/images/monkey-avatar.png"
   );
+  const [loading, setLoading] = useState(false);
 
   const captureImage = (e: any) => {
     const file = e.target.files[0];
@@ -27,25 +29,32 @@ const StepAvatar = (props: any) => {
   };
 
   const onSubmit = async () => {
+    if (!username || !avatar) {
+      return;
+    }
+
+    setLoading(true);
     try {
       const { data } = await activate({ username, avatar });
       console.log("ACTIVATE DATA", data);
       if (data.auth) {
         dispatch(setAuth(data));
       }
+      setLoading(true);
     } catch (error) {
       console.log("ACTIVATE ERROR", error);
+    } finally {
+      setLoading(true);
     }
   };
+  if (loading) {
+    return <Loader message="Creating profile, please wait..." />;
+  }
   return (
     <Card title={`Alright ${username}!`} icon="monkey-emoji.png">
       <p className={styles.subHeading}>Select a cool photo</p>
       <div className={styles.avatarWrapper}>
-        <img
-          src={avatarImage as string}
-          alt="avatarImage"
-          className={styles.avatarImage}
-        />
+        <img src={avatarImage as string} alt="avatarImage" className={styles.avatarImage} />
       </div>
       <div>
         <input

@@ -14,6 +14,9 @@ const StepOtp = ({ onNext }: any) => {
 
   const [otp, setOtp] = useState("");
   const otpSubmitHandler = async () => {
+    if (!otp || !phone || !hash) {
+      return;
+    }
     try {
       const { data } = await verifyOtp({ otp, phone, hash });
       console.log(data);
@@ -30,8 +33,8 @@ const StepOtp = ({ onNext }: any) => {
           <Button onClick={otpSubmitHandler} text="Next" />
         </div>
         <p className={styles.bottomParagraph}>
-          By entering your number, you're agreeing to our Terms of Service and
-          Privacy Policy. Thanks!
+          By entering your number, you're agreeing to our Terms of Service and Privacy Policy.
+          Thanks!
         </p>
       </Card>
     </div>
