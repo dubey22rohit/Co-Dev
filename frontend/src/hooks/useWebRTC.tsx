@@ -12,11 +12,16 @@ const useWebRTC = (roomId: string, user: any) => {
   const peerConnections: any = useRef({});
   const localMediaStream: any = useRef<Promise<MediaStream> | MediaStream>();
   const socket: any = useRef(null);
+  const clientsRef: any = useRef([]);
 
   useEffect(() => {
     socket.current = socketInit();
     console.log("socket.current", socket.current);
   }, []);
+
+  useEffect(() => {
+    clientsRef.current = clients;
+  }, [clients]);
 
   const addNewClient = useCallback(
     (newClient: any, cb: Function) => {
@@ -39,7 +44,7 @@ const useWebRTC = (roomId: string, user: any) => {
     };
 
     startCapture().then(() => {
-      addNewClient(user, () => {
+      addNewClient({ ...user, muted: true }, () => {
         const localAudioElement = audioElements.current[user.id];
         if (localAudioElement) {
           localAudioElement.volume = 0; //So that users do not hear their own voice
@@ -80,7 +85,7 @@ const useWebRTC = (roomId: string, user: any) => {
        * *Handle on track on this connection
        */
       peerConnections.current[peerId].ontrack = ({ streams: [remoteStream] }: any) => {
-        addNewClient(remoteUser, () => {
+        addNewClient({ ...remoteUser, muted: true }, () => {
           if (audioElements.current[remoteUser.id]) {
             audioElements.current[remoteUser.id].srcObject = remoteStream;
           } else {
@@ -197,11 +202,64 @@ const useWebRTC = (roomId: string, user: any) => {
     };
   }, []);
 
+  /**
+   * *Listen for mute/unmute
+   */
+  useEffect(() => {
+    const setMute = (mute: boolean, userId: string) => {
+      const clientIdx = clientsRef.current.map((client: any) => client.id).indexOf(userId);
+
+      const connectedClients = JSON.parse(JSON.stringify(clientsRef.current));
+      if (clientIdx > -1) {
+        connectedClients[clientIdx].muted = mute;
+        setClients(connectedClients);
+      }
+    };
+
+    socket.current.on(ACTIONS.MUTE, ({ peerId, userId }: any) => {
+      setMute(true, userId);
+    });
+
+    socket.current.on(ACTIONS.UNMUTE, ({ peerId, userId }: any) => {
+      setMute(false, userId);
+    });
+  }, []);
+
   const provideRef = (instance: any, userId: string) => {
     audioElements.current[userId] = instance;
   };
 
-  return { clients, provideRef };
+  /**
+   * *Handling Mute
+   */
+  const handleMute = (isMute: boolean, userId: string) => {
+    let settled = false;
+    const interval = setInterval(() => {
+      if (localMediaStream.current) {
+        localMediaStream.current.getTracks()[0].enabled = !isMute;
+        if (isMute) {
+          /**
+           * *Telling other clients that this user has muted
+           */
+          socket.current.emit(ACTIONS.MUTE, {
+            roomId,
+            userId,
+          });
+        } else {
+          socket.current.emit(ACTIONS.UNMUTE, {
+            roomId,
+            userId,
+          });
+        }
+        settled = true;
+      }
+      if (settled) {
+        clearInterval(interval);
+      }
+    }, 200);
+  };
+
+  return { clients, provideRef, handleMute };
 };
 
 export default useWebRTC;

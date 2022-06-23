@@ -63,7 +63,30 @@ io.on("connection", (socket) => {
             sessionDescription,
         });
     });
-    //Handle Room Leave
+    /**
+     * *Handle mute/unmute
+     */
+    socket.on(actions_1.ACTIONS.MUTE, ({ roomId, userId }) => {
+        const clients = Array.from(io.sockets.adapter.rooms.get(roomId) || []);
+        clients.forEach((clientId) => {
+            io.to(clientId).emit(actions_1.ACTIONS.MUTE, {
+                peerId: socket.id,
+                userId,
+            });
+        });
+    });
+    socket.on(actions_1.ACTIONS.UNMUTE, ({ roomId, userId }) => {
+        const clients = Array.from(io.sockets.adapter.rooms.get(roomId) || []);
+        clients.forEach((clientId) => {
+            io.to(clientId).emit(actions_1.ACTIONS.UNMUTE, {
+                peerId: socket.id,
+                userId,
+            });
+        });
+    });
+    /**
+     * *Handle Room Leave
+     */
     const leaveRoom = ({ roomId }) => {
         const { rooms } = socket;
         Array.from(rooms).forEach((roomId) => {

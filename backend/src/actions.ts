@@ -7,4 +7,6 @@ export const ACTIONS = {
   ICE_CANDIDATE: "ice-candidate", //from server to client
   SESSION_DESCRIPTION: "session-description", //from server to client
   REMOVE_PEER: "remove-peer",
+  MUTE: "mute",
+  UNMUTE: "unmute",
 };

@@ -10,9 +10,14 @@ const Room = () => {
   const { id: roomId } = useParams<any>();
   const user = useSelector((state: any) => state.auth.user);
 
-  const { clients, provideRef } = useWebRTC(roomId, user);
+  const { clients, provideRef, handleMute } = useWebRTC(roomId, user);
 
   const [room, setRoom] = useState<any>();
+  const [isMute, setIsMute] = useState(true);
+
+  useEffect(() => {
+    handleMute(isMute, user.id);
+  }, [isMute]);
 
   const handleAllRoomsBack = () => {
     history.goBack();
@@ -25,6 +30,13 @@ const Room = () => {
       setRoom(data);
     })();
   }, []);
+
+  const handleMuteClick = (clientId: string) => {
+    if (clientId !== user.id) {
+      return;
+    }
+    setIsMute((prev) => !prev);
+  };
 
   return (
     <div>
@@ -55,12 +67,12 @@ const Room = () => {
                   <audio ref={(instance) => provideRef(instance, client.id)} autoPlay></audio>
                   <img className={styles.userAvatar} src={client.avatar} alt="avatar" />
 
-                  <button className={styles.micBtn}>
-                    {/* <img
-                                    src="/images/mic.png"
-                                    alt="mic-icon"
-                                /> */}
-                    <img src="/images/mic-mute.png" alt="mic-mute-icon" />
+                  <button className={styles.micBtn} onClick={() => handleMuteClick(client.id)}>
+                    {client.muted ? (
+                      <img src="/images/mic-mute.png" alt="mic-mute-icon" />
+                    ) : (
+                      <img src="/images/mic.png" alt="mic-icon" />
+                    )}
                   </button>
                 </div>
                 <h4>{client.name}</h4>
