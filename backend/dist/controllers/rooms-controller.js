@@ -36,6 +36,12 @@ class RoomsController {
             return res.json(allRooms);
         });
     }
+    show(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const room = yield room_service_1.default.getRoom(req.params.roomId);
+            return res.status(200).json(room);
+        });
+    }
 }
 exports.default = new RoomsController();
 //# sourceMappingURL=rooms-controller.js.map

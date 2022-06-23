@@ -16,5 +16,6 @@ router.get("/api/refresh", auth_controller_1.default.refresh);
 router.post("/api/logout", auth_middleware_1.default, auth_controller_1.default.logout);
 router.post("/api/rooms", auth_middleware_1.default, rooms_controller_1.default.create);
 router.get("/api/rooms", auth_middleware_1.default, rooms_controller_1.default.index);
+router.get("/api/rooms/:roomId", auth_middleware_1.default, rooms_controller_1.default.show);
 exports.default = router;
 //# sourceMappingURL=routes.js.map

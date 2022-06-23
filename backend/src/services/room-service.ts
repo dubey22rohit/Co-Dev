@@ -10,6 +10,7 @@ class RoomService {
       console.log(error);
     }
   }
+
   public async getAllRooms(types: Array<string>): Promise<Array<any>> {
     try {
       const rooms = await Room.find({ roomType: { $in: types } })
@@ -17,6 +18,15 @@ class RoomService {
         .populate("ownerId")
         .exec();
       return rooms;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  public async getRoom(roomId: string) {
+    try {
+      const room = await Room.findOne({ _id: roomId });
+      return room;
     } catch (error) {
       console.log(error);
     }

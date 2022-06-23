@@ -15,6 +15,7 @@ export const activate = async (data: any) => api.post("/api/activate", data);
 export const logout = async () => api.post("/api/logout");
 export const createRoom = async (data: any) => api.post("/api/rooms", data);
 export const getAllRooms = async () => api.get("/api/rooms");
+export const getRoom = async (roomId: any) => api.get(`/api/rooms/${roomId}`);
 
 api.interceptors.response.use(
   (config) => {

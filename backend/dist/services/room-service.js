@@ -40,6 +40,17 @@ class RoomService {
             }
         });
     }
+    getRoom(roomId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const room = yield Room_1.default.findOne({ _id: roomId });
+                return room;
+            }
+            catch (error) {
+                console.log(error);
+            }
+        });
+    }
 }
 exports.default = new RoomService();
 //# sourceMappingURL=room-service.js.map
