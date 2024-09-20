@@ -50,9 +50,6 @@ To run this project locally, you need to have the following installed:
 
 ### NodeJS (Backend) Installation
 
-    **Clone the repository:**
-   Clone the repository to your local machine using Git.
-
    ```bash
    git clone https://github.com/dubey22rohit/Co-Dev.git
    ```
