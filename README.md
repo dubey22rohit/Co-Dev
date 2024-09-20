@@ -21,3 +21,47 @@ Welcome to the **Clubhouse-like Chat Application**, a real-time communication pl
 - **Node.js**: The backend is a lightweight and efficient server running on Node.js.
 - **Express**: The application is powered by Express, providing routing and middleware for the server-side logic.
 - **Socket.IO**: For real-time bi-directional communication between clients and the server to manage chat room events and signaling for WebRTC.
+
+## Getting Started
+
+### Prerequisites
+To run this project locally, you need to have the following installed:
+- **Node.js** (v14 or above)
+- **npm** (Node Package Manager)
+- **React.js** (create-react-app or a custom setup)
+
+### React App (Frontend) Installation
+
+  **Clone the repository:**
+   Clone the repository to your local machine using Git.
+
+   ```bash
+   git clone https://github.com/dubey22rohit/Co-Dev.git
+   ```
+   ```bash
+   cd Co-dev/frontend
+   ```
+    ```bash
+    npm install
+    ```
+    ```bash
+    npm start
+    ```
+
+### NodeJS (Backend) Installation
+
+    **Clone the repository:**
+   Clone the repository to your local machine using Git.
+
+   ```bash
+   git clone https://github.com/dubey22rohit/Co-Dev.git
+   ```
+   ```bash
+    cd Co-dev/backend
+   ```
+    ```bash
+    npm install
+    ```
+    ```bash
+    npm start
+    ```
