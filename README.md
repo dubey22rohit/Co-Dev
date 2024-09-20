@@ -41,12 +41,12 @@ To run this project locally, you need to have the following installed:
    ```bash
    cd Co-dev/frontend
    ```
-    ```bash
+   ```bash
     npm install
-    ```
-    ```bash
+   ```
+   ```bash
     npm start
-    ```
+   ```
 
 ### NodeJS (Backend) Installation
 
@@ -56,12 +56,14 @@ To run this project locally, you need to have the following installed:
    ```bash
    git clone https://github.com/dubey22rohit/Co-Dev.git
    ```
+
    ```bash
     cd Co-dev/backend
    ```
-    ```bash
+
+   ```bash
     npm install
-    ```
-    ```bash
+   ```
+   ```bash
     npm start
-    ```
+   ```
